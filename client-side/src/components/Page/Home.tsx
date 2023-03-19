@@ -1,10 +1,27 @@
 import { Button, Input } from "@nextui-org/react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  // input room id
+  const [roomId, setRoomId] = useState("");
+  const roomIdHandler = (event: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
+    setRoomId(event.target.value);
+  };
+
+  // route
   const navigate = useNavigate();
-  const toRoom = () => {
+  const createRoom = () => {
     navigate("/room");
+  };
+  const toRoom = () => {
+    if (roomId === "") {
+      alert("Room id cannot be empty.");
+    } else {
+      navigate("/room/" + roomId);
+    }
   };
   const toCharacter = () => {
     navigate("/character");
@@ -27,6 +44,8 @@ const Home = () => {
               ></div>
             }
             contentRightStyling={false}
+            value={roomId}
+            onChange={roomIdHandler}
           />
         </div>
         <div className="m-5 grid grid-cols-2 gap-4">
@@ -37,7 +56,16 @@ const Home = () => {
             auto
             onPress={toRoom}
           >
-            Enter
+            Enter Room
+          </Button>
+          <Button
+            aria-label="button"
+            flat
+            color="success"
+            auto
+            onPress={createRoom}
+          >
+            Create Room
           </Button>
           <Button
             aria-label="button"

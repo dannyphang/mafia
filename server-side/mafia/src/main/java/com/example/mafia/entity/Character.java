@@ -13,7 +13,8 @@ public class Character {
     public Character() {
     }
 
-    public Character(String characterName, String characterDescription, int characterOrder, String characterSide, Map<String, Boolean> characterAbility) {
+    public Character(String characterId, String characterName, String characterDescription, int characterOrder, String characterSide, Map<String, Boolean> characterAbility) {
+        CharacterId = characterId;
         CharacterName = characterName;
         CharacterDescription = characterDescription;
         CharacterOrder = characterOrder;

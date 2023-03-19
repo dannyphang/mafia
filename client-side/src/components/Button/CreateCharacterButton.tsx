@@ -11,21 +11,12 @@ import {
 import React, { useState } from "react";
 import "../../assests/style/_style.css";
 import { CharacterDTO, CharacterService } from "../../service/CharacterService";
+import {
+  characterAbilityList,
+  characterSideList,
+} from "../../assests/data/CharacterData";
 
 const CreateCharacterButton = (props: { characterList: () => void }) => {
-  const characterSideList = ["民", "神", "狼"];
-  const characterAbilityList = [
-    "isBounce",
-    "isChecker",
-    "isDealer",
-    "isExplode",
-    "isHealer",
-    "isInvisible",
-    "isKiller",
-    "isProtector",
-    "isSilentener",
-  ];
-
   const characterInput = {
     name: "",
     order: 0,
@@ -37,7 +28,6 @@ const CreateCharacterButton = (props: { characterList: () => void }) => {
   const { visible, setVisible } = useModal(false);
   const modalHandler = () => {
     setVisible(true);
-    console.log("modal button clicked");
   };
   const closeModalHandler = () => {
     setVisible(false);
@@ -84,18 +74,12 @@ const CreateCharacterButton = (props: { characterList: () => void }) => {
   };
 
   const createBtn = () => {
-    console.log(nameValue);
-    console.log(orderValue);
-    console.log(descriptionValue);
-    console.log(selected);
-    console.log(checked);
-
-    let tempMap = new Map<string, boolean>();
+    let tempMap: Record<string, boolean> = {};
     for (let i = 0; i < characterAbilityList.length; i++) {
       if (checked.includes(characterAbilityList[i])) {
-        tempMap.set(characterAbilityList[i], true);
+        tempMap[characterAbilityList[i]] = true;
       } else {
-        tempMap.set(characterAbilityList[i], false);
+        tempMap[characterAbilityList[i]] = false;
       }
     }
 
@@ -106,8 +90,6 @@ const CreateCharacterButton = (props: { characterList: () => void }) => {
       characterSide: selected,
       characterAbility: tempMap,
     };
-
-    console.log(tempMap);
 
     new CharacterService().createCharacter(character).then(props.characterList);
 

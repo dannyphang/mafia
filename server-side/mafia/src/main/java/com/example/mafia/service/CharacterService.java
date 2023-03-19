@@ -18,7 +18,7 @@ public class CharacterService {
 
     public Character createCharacter(Character character) {
         String uuid = UUID.randomUUID().toString();
-//        character.setCharacterId(uuid);
+        character.setCharacterId(uuid);
         Firestore db = FirestoreClient.getFirestore();
         db.collection("Character").document(uuid).set(character);
         return character;
@@ -40,7 +40,7 @@ public class CharacterService {
             throw new RuntimeException(e);
         }
 
-        return "Deleted URL with id: " + id;
+        return "Deleted Character with id: " + id;
     }
 
     public Character updateCharacter(String id, Character character) {
@@ -52,6 +52,7 @@ public class CharacterService {
     public List<Character> getAllCharacters() {
         Firestore db = FirestoreClient.getFirestore();
         ApiFuture<QuerySnapshot> future = db.collection("Character").get();
+
         try {
             return future.get().toObjects(Character.class);
         } catch (InterruptedException | ExecutionException e) {

@@ -17,11 +17,7 @@ function App() {
     <NextUIProvider>
       <Routes>
         <Route path="/" element={<Home />} />
-      </Routes>
-      <Routes>
-        <Route path="/room" element={<Room />} />
-      </Routes>
-      <Routes>
+        <Route path="/room/:id" element={<Room />} />
         <Route path="/character" element={<Character />} />
       </Routes>
     </NextUIProvider>
