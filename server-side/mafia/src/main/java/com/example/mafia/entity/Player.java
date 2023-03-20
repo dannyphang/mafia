@@ -50,7 +50,7 @@ public class Player {
         return IsAlive;
     }
 
-    public void setAlive(boolean alive) {
+    public void setIsAlive(boolean alive) {
         IsAlive = alive;
     }
 
@@ -58,7 +58,7 @@ public class Player {
         return IsSpeakTurn;
     }
 
-    public void setSpeakTurn(boolean speakTurn) {
+    public void setIsSpeakTurn(boolean speakTurn) {
         IsSpeakTurn = speakTurn;
     }
 

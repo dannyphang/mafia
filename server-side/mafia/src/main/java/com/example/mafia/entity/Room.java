@@ -1,20 +1,18 @@
 package com.example.mafia.entity;
 
-import java.util.List;
+import java.util.*;
 
 public class Room {
     private String RoomId;
-    private List<String> PlayerId;
+    private ArrayList<String> PlayerIdList;
     private int RoomSize;
 
-    public Room(String roomId) {
-        RoomId = roomId;
-        PlayerId = null;
+    public Room() {
     }
 
-    public Room(String roomId, List<String> playerId) {
+    public Room(String roomId, ArrayList<String> playerIdList) {
         RoomId = roomId;
-        PlayerId = playerId;
+        PlayerIdList = playerIdList;
     }
 
     public String getRoomId() {
@@ -25,19 +23,21 @@ public class Room {
         RoomId = roomId;
     }
 
-    public List<String> getPlayerId() {
-        return PlayerId;
+    public ArrayList<String> getPlayerIdList() {
+        return PlayerIdList;
     }
 
-    public void setPlayerId(List<String> playerId) {
-        PlayerId = playerId;
+    public void setPlayerIdList(ArrayList<String> playerIdList) {
+        PlayerIdList = playerIdList;
     }
 
     @Override
     public String toString() {
         return "Room{" +
                 "RoomId='" + RoomId + '\'' +
-                ", PlayerId=" + PlayerId +
+                ", PlayerIdList=" + PlayerIdList +
+                ", RoomSize=" + RoomSize +
                 '}';
     }
 }
+

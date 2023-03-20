@@ -1,0 +1,25 @@
+package com.example.mafia.controller;
+
+import com.example.mafia.entity.Player;
+import com.example.mafia.service.PlayerService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+@CrossOrigin(origins = "http://localhost:3000")
+@RestController
+@RequestMapping("/player")
+public class PlayerController {
+
+    @Autowired
+    public PlayerService playerService;
+
+    @PostMapping("")
+    public Player createNewPlayer(@RequestBody Player player) {
+        return playerService.createPlayer(player);
+    }
+
+    @GetMapping("/{id}")
+    public Player getPlayerById(@PathVariable("id") String id) {
+        return playerService.getPlayerById(id);
+    }
+}

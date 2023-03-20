@@ -1,5 +1,7 @@
 package com.example.mafia.controller;
 
+import com.example.mafia.entity.JoinerPlayer;
+import com.example.mafia.entity.Room;
 import com.example.mafia.service.RoomService;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,7 @@ public class RoomController {
     public RoomService roomService;
 
     @PostMapping("")
-    public String createNewRoom() {
+    public Room createNewRoom() {
         return roomService.createNewRoom();
     }
 
@@ -23,24 +25,23 @@ public class RoomController {
     }
 
     @GetMapping("/{id}")
-    public String getRoomById(@PathVariable("id") String roomId) {
-        return roomService.getRoomById(roomId).toString();
+    public JoinerPlayer getRoomById(@PathVariable("id") String roomId) {
+        return roomService.getRoomById(roomId);
     }
 
-//    @PutMapping("/addNewPlayerByIdToRoom/{id}")
-//    public String addNewPlayerByIdToRoom(@PathVariable("id") String roomId, @RequestBody String playerId) {
-//        return roomService.addNewPlayerByIdToRoom(roomId, playerId);
+//    @PutMapping("/addNewPlayerToRoom")
+//    public String addNewPlayerToRoom(@RequestBody JoinerPlayer player) {
+//        return roomService.addNewPlayerToRoom(player);
 //    }
 //
-//    @PutMapping("/removePlayerByIdFromRoom/{id}")
-//    public String removePlayerByIdFromRoom(@PathVariable("id") String roomId, @RequestBody String playerId) {
-//        return roomService.removePlayerByIdFromRoom(roomId, playerId);
+//    @PutMapping("/removePlayerFromRoom")
+//    public String removePlayerFromRoom(@RequestBody JoinerPlayer player) {
+//        return roomService.removePlayerFromRoom(player);
 //    }
 //
-//    @PostMapping("/addNewCharacterToRoom")
-//    public String addNewCharacterByIdToRoom(@RequestBody String body) {
-//        String[] split = body.split(" ");
-//        return roomService.addNewCharacterByIdToRoom(split[0], split[1]);
+//    @PostMapping("/assignCharacterToPlayer")
+//    public String assignCharacterToPlayer(@RequestBody JoinerPlayer player) {
+//        return roomService.assignCharacterToPlayer(player);
 //    }
 
 }

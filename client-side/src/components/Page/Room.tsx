@@ -2,60 +2,25 @@ import { Button, Card, Grid, Input, Table, Text } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { CharacterDTO, CharacterService } from "../../service/CharacterService";
+import { PlayerDTO } from "../../service/PlayerService";
+import { RoomDTO, RoomService } from "../../service/RoomService";
 
 const Room = () => {
   const { id } = useParams();
 
   let isGameStart: Boolean = false;
   const [gameStart, setGameStart] = useState(isGameStart);
+  const [playerLists, setPlayerLists] = useState<PlayerDTO[]>([]);
   const [charactersLists, setCharactersLists] = useState<CharacterDTO[]>([]);
   const [characterAmount, setCharacterAmount] = useState(0);
   const [characterName, setCharacterName] = useState("");
   const [characterPlayerList, setCharacterPlayerList] = useState<any[]>([]);
   useEffect(() => {
+    getPlayers();
     getCharacters();
   }, []);
 
   if (!id) return <div>Loading...</div>;
-
-  let list = [
-    {
-      title: "Orange",
-      price: "1",
-    },
-    {
-      title: "OrangeQFE",
-      price: "1",
-    },
-    {
-      title: "Tangerine dqwdwefa dqwdfqFGWFG",
-      price: "2",
-    },
-    {
-      title: "Orange",
-      price: "1",
-    },
-    {
-      title: "OrangeQFE",
-      price: "1",
-    },
-    {
-      title: "Tangerine dqwdwefa dqwdfqFGWFG",
-      price: "2",
-    },
-    {
-      title: "Orange",
-      price: "1",
-    },
-    {
-      title: "OrangeQFE",
-      price: "1",
-    },
-    {
-      title: "Tangerine dqwdwefa dqwdfqFGWFG",
-      price: "2",
-    },
-  ];
 
   let isPlayerOne: Boolean = true;
 
@@ -78,6 +43,14 @@ const Room = () => {
     new CharacterService().getAllCharacters().then((data) => {
       setCharactersLists(data);
     });
+  }
+
+  async function getPlayers() {
+    if (id != undefined)
+      new RoomService().getRoomById(id).then((data) => {
+        console.log(data.players);
+        setPlayerLists(data.players);
+      });
   }
 
   const handleCharacterNameChange = (event: {
@@ -129,15 +102,16 @@ const Room = () => {
       <div>
         {!gameStart && (
           <Grid.Container gap={2} justify="center" style={{}}>
-            {list.map((item, index) => (
+            {playerLists.map((item, index) => (
               <Grid className="p-5" key={index}>
                 <Card
                   style={{
                     padding: "20px",
                     width: "fit-content",
                   }}
+                  isPressable
                 >
-                  <Text>{item.title}</Text>
+                  <Text>{item.playerId}</Text>
                 </Card>
               </Grid>
             ))}

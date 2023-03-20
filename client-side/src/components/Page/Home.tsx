@@ -1,6 +1,7 @@
 import { Button, Input } from "@nextui-org/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { RoomService } from "../../service/RoomService";
 
 const Home = () => {
   // input room id
@@ -13,14 +14,23 @@ const Home = () => {
 
   // route
   const navigate = useNavigate();
-  const createRoom = () => {
-    navigate("/room");
-  };
+  async function createRoom() {
+    new RoomService().createNewRoom().then((data) => {
+      navigate("/room/" + data.roomId);
+    });
+  }
   const toRoom = () => {
     if (roomId === "") {
       alert("Room id cannot be empty.");
     } else {
-      navigate("/room/" + roomId);
+      new RoomService().getRoomById(roomId).then((data) => {
+        if (data.roomId === null) {
+          alert("Room id does not exist.");
+        } else {
+          navigate("/room/" + roomId);
+        }
+      });
+      // navigate("/room/" + roomId);
     }
   };
   const toCharacter = () => {
