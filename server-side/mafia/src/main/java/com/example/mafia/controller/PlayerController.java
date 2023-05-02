@@ -5,6 +5,8 @@ import com.example.mafia.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/player")
@@ -21,5 +23,10 @@ public class PlayerController {
     @GetMapping("/{id}")
     public Player getPlayerById(@PathVariable("id") String id) {
         return playerService.getPlayerById(id);
+    }
+
+    @GetMapping("/getPlayerListByRoomId/{id}")
+    public List<Player> getPlayerListByRoomId(@PathVariable("id") String id) {
+        return playerService.getPlayerListByRoomId(id);
     }
 }

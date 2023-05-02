@@ -9,7 +9,6 @@ import {
 } from "@nextui-org/react";
 import CreateCharacterButton from "../Button/CreateCharacterButton";
 import Header from "../SharedSection/Header";
-import { apiConfig } from "../../environment/apiConfig";
 import { CharacterDTO, CharacterService } from "../../service/CharacterService";
 import { useEffect, useState } from "react";
 import {
@@ -18,34 +17,6 @@ import {
 } from "../../assests/data/CharacterData";
 
 const Character = () => {
-  // let charactersList = [
-  //   {
-  //     name: "预言家",
-  //     order: 4,
-  //     description: "预言家可以在夜间查验任意一名玩家，知道其阵营身份。",
-  //     side: "神",
-  //   },
-  //   {
-  //     name: "女巫",
-  //     order: 3,
-  //     description:
-  //       "女巫拥有解药和毒药，解药可以解救任意一名被刀玩家，毒药可以毒杀任意一名玩家，其中解药和毒药都必须在夜间使用，但不能同一晚上使用两种药。",
-  //     side: "神",
-  //   },
-  //   {
-  //     name: "平民",
-  //     order: 0,
-  //     description: "没有任何技能。",
-  //     side: "民",
-  //   },
-  //   {
-  //     name: "狼人",
-  //     order: 3,
-  //     description: "夜间可以刀杀任意一名玩家。",
-  //     side: "狼",
-  //   },
-  // ];
-
   const [charactersLists, setCharactersLists] = useState<CharacterDTO[]>([]);
   let charactersAbility: string[] = [];
 
@@ -68,10 +39,10 @@ const Character = () => {
   // modal
   const { visible, setVisible } = useModal(false);
   const modalHandler = async (id?: string) => {
-    if (id != undefined) {
+    if (id !== undefined) {
       character = await new CharacterService().getCharacterById(id);
       for (const key in character.characterAbility) {
-        if (character.characterAbility[key] == true) {
+        if (character.characterAbility[key] === true) {
           charactersAbility.push(key);
         }
       }
@@ -92,7 +63,7 @@ const Character = () => {
         Character List
       </Text>
       {charactersLists.map((character) => (
-        <a
+        <div
           key={character.characterId}
           onClick={() => modalHandler(character.characterId)}
         >
@@ -108,7 +79,7 @@ const Character = () => {
             <Text size={16}>{character.characterDescription}</Text>
           </div>
           <div className="border-b border-gray-400 mx-4"></div>
-        </a>
+        </div>
       ))}
       <CreateCharacterButton characterList={getCharacters} />
       <Modal

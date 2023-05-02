@@ -1,15 +1,14 @@
 package com.example.mafia.controller;
 
-import com.example.mafia.entity.JoinerPlayer;
+import com.example.mafia.entity.RoomPlayer;
 import com.example.mafia.entity.Room;
 import com.example.mafia.service.RoomService;
-import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/room")
+@CrossOrigin(origins = "http://localhost:3000")
 public class RoomController {
     @Autowired
     public RoomService roomService;
@@ -25,23 +24,12 @@ public class RoomController {
     }
 
     @GetMapping("/{id}")
-    public JoinerPlayer getRoomById(@PathVariable("id") String roomId) {
+    public Room getRoomById(@PathVariable("id") String roomId) {
         return roomService.getRoomById(roomId);
     }
 
-//    @PutMapping("/addNewPlayerToRoom")
-//    public String addNewPlayerToRoom(@RequestBody JoinerPlayer player) {
-//        return roomService.addNewPlayerToRoom(player);
-//    }
-//
-//    @PutMapping("/removePlayerFromRoom")
-//    public String removePlayerFromRoom(@RequestBody JoinerPlayer player) {
-//        return roomService.removePlayerFromRoom(player);
-//    }
-//
-//    @PostMapping("/assignCharacterToPlayer")
-//    public String assignCharacterToPlayer(@RequestBody JoinerPlayer player) {
-//        return roomService.assignCharacterToPlayer(player);
-//    }
-
+    @PutMapping("/addPlayerToRoom")
+    public String addPlayerToRoom(@RequestBody RoomPlayer rm) {
+        return roomService.addNewPlayerToRoom(rm.getRoomId(), rm.getPlayerId());
+    }
 }

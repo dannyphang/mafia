@@ -1,6 +1,5 @@
 package com.example.mafia.service;
 
-import com.example.mafia.entity.JoinerPlayer;
 import com.example.mafia.entity.Player;
 import com.example.mafia.entity.Room;
 import com.google.api.core.ApiFuture;
@@ -11,7 +10,6 @@ import com.google.firebase.cloud.FirestoreClient;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
@@ -27,6 +25,32 @@ public class RoomService {
         Firestore db = FirestoreClient.getFirestore();
         db.collection("Room").document(id).create(new Room(id, new ArrayList<>()));
         return new Room(id, new ArrayList<>());
+    }
+
+    public String addNewPlayerToRoom(String roomId, String playerId) {
+        try {
+            Firestore db = FirestoreClient.getFirestore();
+            DocumentReference docRef = db.collection("Room").document(roomId);
+            ApiFuture<DocumentSnapshot> future = docRef.get();
+            DocumentSnapshot document = future.get();
+            if(document.exists()) {
+                Room room = document.toObject(Room.class);
+                assert room != null;
+                try {
+                    room.getPlayerIdList().add(playerId);
+                    db.collection("Room").document(roomId).set(room);
+                    return "Added player to room";
+                }
+                catch (Exception e) {
+                    return e.getMessage();
+                }
+            }
+            else {
+                return "Room not found";
+            }
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public String deleteRoomById(String roomId) {
@@ -48,41 +72,14 @@ public class RoomService {
 
     }
 
-    public JoinerPlayer getRoomById(String roomId) {
+    public Room getRoomById(String roomId) {
         try {
             Firestore db = FirestoreClient.getFirestore();
             DocumentReference docRef = db.collection("Room").document(roomId);
             ApiFuture<DocumentSnapshot> future = docRef.get();
             DocumentSnapshot document = future.get();
             if(document.exists()) {
-                return new JoinerPlayer(
-                        roomId,
-                        getPlayersInRoom(roomId));
-            }
-            else {
-                return new JoinerPlayer(null, null);
-            }
-        } catch (ExecutionException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public ArrayList<Player> getPlayersInRoom(String roomId) {
-        try {
-            Firestore db = FirestoreClient.getFirestore();
-            DocumentReference docRef = db.collection("Room").document(roomId);
-            ApiFuture<DocumentSnapshot> future = docRef.get();
-            DocumentSnapshot document = future.get();
-            if(document.exists()) {
-                ArrayList<String> getPlayerLists = Objects.requireNonNull(document.toObject(Room.class)).getPlayerIdList();
-                ArrayList<Player> playerList = new ArrayList<>();
-
-                if(getPlayerLists != null) {
-                    for(String playerId : getPlayerLists){
-                        playerList.add(getPlayerById(playerId));
-                    }
-                };
-                return playerList;
+                return document.toObject(Room.class);
             }
             else {
                 return null;

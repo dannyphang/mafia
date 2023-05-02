@@ -2,24 +2,27 @@ package com.example.mafia.entity;
 
 public class Player {
     private String PlayerId;
-    private String UserId;
+    private String Name;
     private String CharacterId;
     private boolean IsAlive;
     private boolean IsSpeakTurn;
-    private float VoteCount;
+    private double VoteCount;
     private String VotePlayerId;
 
     public Player() {
     }
 
-    public Player(String playerId, String userId, String characterId, boolean isAlive, boolean isSpeakTurn, float voteCount, String votePlayerId) {
-        PlayerId = playerId;
-        UserId = userId;
-        CharacterId = characterId;
-        IsAlive = isAlive;
-        IsSpeakTurn = isSpeakTurn;
-        VoteCount = voteCount;
-        VotePlayerId = votePlayerId;
+    @Override
+    public String toString() {
+        return "Player{" +
+                "PlayerId='" + PlayerId + '\'' +
+                ", Name='" + Name + '\'' +
+                ", CharacterId='" + CharacterId + '\'' +
+                ", IsAlive=" + IsAlive +
+                ", IsSpeakTurn=" + IsSpeakTurn +
+                ", VoteCount=" + VoteCount +
+                ", VotePlayerId='" + VotePlayerId + '\'' +
+                '}';
     }
 
     public String getPlayerId() {
@@ -30,12 +33,12 @@ public class Player {
         PlayerId = playerId;
     }
 
-    public String getUserId() {
-        return UserId;
+    public String getName() {
+        return Name;
     }
 
-    public void setUserId(String userId) {
-        UserId = userId;
+    public void setName(String name) {
+        Name = name;
     }
 
     public String getCharacterId() {
@@ -50,7 +53,7 @@ public class Player {
         return IsAlive;
     }
 
-    public void setIsAlive(boolean alive) {
+    public void setAlive(boolean alive) {
         IsAlive = alive;
     }
 
@@ -58,15 +61,15 @@ public class Player {
         return IsSpeakTurn;
     }
 
-    public void setIsSpeakTurn(boolean speakTurn) {
+    public void setSpeakTurn(boolean speakTurn) {
         IsSpeakTurn = speakTurn;
     }
 
-    public float getVoteCount() {
+    public double getVoteCount() {
         return VoteCount;
     }
 
-    public void setVoteCount(float voteCount) {
+    public void setVoteCount(double voteCount) {
         VoteCount = voteCount;
     }
 
@@ -78,16 +81,13 @@ public class Player {
         VotePlayerId = votePlayerId;
     }
 
-    @Override
-    public String toString() {
-        return "Player{" +
-                "PlayerId='" + PlayerId + '\'' +
-                ", UserId='" + UserId + '\'' +
-                ", CharacterId='" + CharacterId + '\'' +
-                ", IsAlive=" + IsAlive +
-                ", IsSpeakTurn=" + IsSpeakTurn +
-                ", VoteCount=" + VoteCount +
-                ", VotePlayerId='" + VotePlayerId + '\'' +
-                '}';
+    public Player(String playerId, String name, String characterId, boolean isAlive, boolean isSpeakTurn, double voteCount, String votePlayerId) {
+        PlayerId = playerId;
+        Name = name;
+        CharacterId = characterId;
+        IsAlive = isAlive;
+        IsSpeakTurn = isSpeakTurn;
+        VoteCount = voteCount;
+        VotePlayerId = votePlayerId;
     }
 }

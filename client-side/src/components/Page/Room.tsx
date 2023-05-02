@@ -2,7 +2,7 @@ import { Button, Card, Grid, Input, Table, Text } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { CharacterDTO, CharacterService } from "../../service/CharacterService";
-import { PlayerDTO } from "../../service/PlayerService";
+import { PlayerDTO, PlayerService } from "../../service/PlayerService";
 import { RoomDTO, RoomService } from "../../service/RoomService";
 
 const Room = () => {
@@ -46,11 +46,11 @@ const Room = () => {
   }
 
   async function getPlayers() {
-    if (id != undefined)
-      new RoomService().getRoomById(id).then((data) => {
-        console.log(data.players);
-        setPlayerLists(data.players);
+    if (id != undefined) {
+      new PlayerService().getPlayerListByRoomId(id).then((data) => {
+        setPlayerLists(data);
       });
+    }
   }
 
   const handleCharacterNameChange = (event: {
@@ -111,7 +111,7 @@ const Room = () => {
                   }}
                   isPressable
                 >
-                  <Text>{item.playerId}</Text>
+                  <Text>{item.name}</Text>
                 </Card>
               </Grid>
             ))}

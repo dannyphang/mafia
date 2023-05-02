@@ -9,6 +9,8 @@ import com.google.cloud.firestore.Firestore;
 import com.google.firebase.cloud.FirestoreClient;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
@@ -21,6 +23,7 @@ public class PlayerService {
     public Player createPlayer(Player player) {
         String uuid = UUID.randomUUID().toString();
         Firestore db = FirestoreClient.getFirestore();
+        player.setPlayerId(uuid);
         db.collection("Player").document(uuid).set(player);
         return player;
     }
@@ -42,7 +45,39 @@ public class PlayerService {
             ApiFuture<DocumentSnapshot> future = docRef.get();
             DocumentSnapshot document = future.get();
             if(document.exists()) {
-                return document.toObject(Player.class);
+                String PlayerId = document.getId();
+                String CharacterId = Objects.requireNonNull(document.getData()).get("characterId").toString();
+                String Name = document.getData().get("name").toString();
+                boolean IsAlive = (boolean) document.getData().get("alive");
+                boolean IsSpeakTurn = (boolean) document.getData().get("speakTurn");
+                double VoteCount = (double) document.getData().get("voteCount");
+                String VotePlayerId = document.getData().get("votePlayerId").toString();
+                return new Player(PlayerId, Name, CharacterId, IsAlive, IsSpeakTurn, VoteCount, VotePlayerId);
+            }
+            else {
+                return null;
+            }
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public ArrayList<Player> getPlayerListByRoomId(String roomId) {
+        try {
+            Firestore db = FirestoreClient.getFirestore();
+            DocumentReference docRef = db.collection("Room").document(roomId);
+            ApiFuture<DocumentSnapshot> future = docRef.get();
+            DocumentSnapshot document = future.get();
+            if(document.exists()) {
+                ArrayList<String> getPlayerLists = Objects.requireNonNull(document.toObject(Room.class)).getPlayerIdList();
+                ArrayList<Player> playerList = new ArrayList<>();
+
+                if(getPlayerLists != null) {
+                    for(String playerId : getPlayerLists){
+                        playerList.add(getPlayerById(playerId));
+                    }
+                };
+                return playerList;
             }
             else {
                 return null;
