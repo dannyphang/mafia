@@ -32,4 +32,9 @@ public class RoomController {
     public String addPlayerToRoom(@RequestBody RoomPlayer rm) {
         return roomService.addNewPlayerToRoom(rm.getRoomId(), rm.getPlayerId());
     }
+
+    @PutMapping("/deletePlayerFromRoom")
+    public String deletePlayerFromRoom(@RequestBody RoomPlayer rm) {
+        return roomService.deletePlayerFromRoom(rm.getRoomId(), rm.getPlayerId());
+    }
 }

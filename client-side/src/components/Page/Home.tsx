@@ -107,6 +107,14 @@ const Home = () => {
     navigate("/character");
   };
 
+  const enterKeyPress = (event: any) => {
+    let newPlayerName = event.target.value;
+
+    if (event.key === "Enter") {
+      toTheRoomHandle();
+    }
+  };
+
   return (
     <div className="grid justify-items-center my-12">
       <Modal
@@ -131,6 +139,7 @@ const Home = () => {
             autoFocus
             placeholder="Name"
             onChange={nameHandler}
+            onKeyDown={enterKeyPress}
           />
         </Modal.Body>
         <Modal.Footer>

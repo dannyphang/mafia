@@ -28,9 +28,22 @@ public class PlayerService {
         return player;
     }
 
-    public String deletePlayer(String id) {
-
-        return null;
+    public String deletePlayerById(String id) {
+        try {
+            Firestore db = FirestoreClient.getFirestore();
+            DocumentReference docRef = db.collection("Player").document(id);
+            ApiFuture<DocumentSnapshot> future = docRef.get();
+            DocumentSnapshot document = future.get();
+            if(document.exists()) {
+                db.collection("Player").document(id).delete();
+                return "Player deleted";
+            }
+            else {
+                return "Player not found";
+            }
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Player updatePlayer(String id, Player player) {

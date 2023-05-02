@@ -1,9 +1,17 @@
-import { Button, Card, Grid, Input, Table, Text } from "@nextui-org/react";
+import {
+  Badge,
+  Button,
+  Card,
+  Grid,
+  Input,
+  Table,
+  Text,
+} from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { CharacterDTO, CharacterService } from "../../service/CharacterService";
 import { PlayerDTO, PlayerService } from "../../service/PlayerService";
-import { RoomDTO, RoomService } from "../../service/RoomService";
+import { RoomService } from "../../service/RoomService";
 
 const Room = () => {
   const { id } = useParams();
@@ -15,6 +23,8 @@ const Room = () => {
   const [characterAmount, setCharacterAmount] = useState(0);
   const [characterName, setCharacterName] = useState("");
   const [characterPlayerList, setCharacterPlayerList] = useState<any[]>([]);
+  const [deleteVisible, setDeleteVisible] = useState(true);
+
   useEffect(() => {
     getPlayers();
     getCharacters();
@@ -65,6 +75,28 @@ const Room = () => {
     setCharacterAmount(Number(event.target.value));
   };
 
+  const playerCardBtn = () => {
+    setDeleteVisible(!deleteVisible);
+  };
+
+  const deletePlayerBtn = async (
+    event: React.MouseEvent<HTMLSpanElement, MouseEvent>
+  ) => {
+    // when delete button is clicked, only remove the player from the room
+    if (!deleteVisible) {
+      let playerId = (event.target as HTMLSpanElement).id;
+      await new RoomService()
+        .deletePlayerFromRoom(id, playerId)
+        .then((result) => {
+          getPlayers();
+        });
+
+      await new PlayerService().deletePlayer(playerId).then((result) => {
+        setDeleteVisible(!deleteVisible);
+      });
+    }
+  };
+
   const addCharacter = () => {
     let characters = {
       name: characterName,
@@ -92,11 +124,12 @@ const Room = () => {
 
   return (
     <div
-      className="h-screen m-0 p-3"
+      className="h-screen m-0"
       style={{
         backgroundColor: "",
       }}
     >
+      {/* <Header /> */}
       <div>{id}</div>
       {/* shows players at room page before game start */}
       <div>
@@ -104,15 +137,24 @@ const Room = () => {
           <Grid.Container gap={2} justify="center" style={{}}>
             {playerLists.map((item, index) => (
               <Grid className="p-5" key={index}>
-                <Card
-                  style={{
-                    padding: "20px",
-                    width: "fit-content",
-                  }}
-                  isPressable
+                <Badge
+                  id={item.playerId}
+                  color="error"
+                  content="-"
+                  isInvisible={deleteVisible}
+                  onClick={deletePlayerBtn}
                 >
-                  <Text>{item.name}</Text>
-                </Card>
+                  <Card
+                    style={{
+                      padding: "20px",
+                      width: "fit-content",
+                    }}
+                    isPressable
+                    onPress={playerCardBtn}
+                  >
+                    <Text>{item.name}</Text>
+                  </Card>
+                </Badge>
               </Grid>
             ))}
           </Grid.Container>

@@ -14,6 +14,13 @@ export class PlayerService {
             .then(response => response.json());
     }
 
+    // delete player
+    async deletePlayer(playerId: string): Promise<string> {
+        return await fetch(`${this.playerUrl}/${playerId}`, {
+            method: 'DELETE'
+        }).then(response => response.text());
+    }
+
     async getPlayerListByRoomId(id: String): Promise<PlayerDTO[]> {
         return await fetch(`${this.playerUrl}/getPlayerListByRoomId/${id}`)
             .then(response => response.json());

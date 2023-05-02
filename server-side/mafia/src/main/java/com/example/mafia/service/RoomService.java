@@ -53,6 +53,32 @@ public class RoomService {
         }
     }
 
+    public String deletePlayerFromRoom(String roomId, String playerId) {
+        try {
+            Firestore db = FirestoreClient.getFirestore();
+            DocumentReference docRef = db.collection("Room").document(roomId);
+            ApiFuture<DocumentSnapshot> future = docRef.get();
+            DocumentSnapshot document = future.get();
+            if(document.exists()) {
+                Room room = document.toObject(Room.class);
+                assert room != null;
+                try {
+                    room.getPlayerIdList().remove(playerId);
+                    db.collection("Room").document(roomId).set(room);
+                    return "Removed player from room";
+                }
+                catch (Exception e) {
+                    return e.getMessage();
+                }
+            }
+            else {
+                return "Room not found";
+            }
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public String deleteRoomById(String roomId) {
         try {
             Firestore db = FirestoreClient.getFirestore();

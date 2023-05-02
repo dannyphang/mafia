@@ -93,7 +93,7 @@ const Character = () => {
       >
         <Modal.Header>
           <Text aria-label="text" id="character-modal-title" size={18}>
-            Character - {characterObj?.characterId}
+            {characterObj?.characterName}
           </Text>
         </Modal.Header>
         <Modal.Body>

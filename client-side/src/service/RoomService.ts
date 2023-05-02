@@ -20,7 +20,7 @@ export class RoomService {
     }
 
     async addPlayerToRoom(roomId: string, playerId: string): Promise<string> {
-        let addPlayerToRoom: addPlayerToRoomDTO = {
+        let playerRoom: playerRoomDTO = {
             roomId: roomId,
             playerId: playerId
         };
@@ -30,7 +30,22 @@ export class RoomService {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(addPlayerToRoom)
+            body: JSON.stringify(playerRoom)
+        }).then(response => response.text());
+    }
+
+    async deletePlayerFromRoom(roomId: string, playerId: string): Promise<string> {
+        let playerRoom: playerRoomDTO = {
+            roomId: roomId,
+            playerId: playerId
+        };
+
+        return await fetch(`${this.roomUrl}/deletePlayerFromRoom`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(playerRoom)
         }).then(response => response.text());
     }
 }
@@ -40,7 +55,7 @@ export interface RoomDTO {
     players: PlayerDTO[];
 }
 
-export interface addPlayerToRoomDTO {
+export interface playerRoomDTO {
     roomId: string;
     playerId: string;
 }

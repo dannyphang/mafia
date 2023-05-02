@@ -29,4 +29,9 @@ public class PlayerController {
     public List<Player> getPlayerListByRoomId(@PathVariable("id") String id) {
         return playerService.getPlayerListByRoomId(id);
     }
+
+    @DeleteMapping("/{id}")
+    public String deletePlayerById(@PathVariable("id") String id) {
+        return playerService.deletePlayerById(id);
+    }
 }
