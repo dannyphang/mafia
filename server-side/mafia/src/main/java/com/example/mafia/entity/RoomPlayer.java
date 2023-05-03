@@ -5,6 +5,8 @@ import java.util.ArrayList;
 public class RoomPlayer {
     private String PlayerId;
     private String RoomId;
+    private boolean Assigned;
+    private boolean GameStarted;
 
     public RoomPlayer() {
     }

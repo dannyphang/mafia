@@ -5,24 +5,19 @@ public class Player {
     private String Name;
     private String CharacterId;
     private boolean IsAlive;
-    private boolean IsSpeakTurn;
-    private double VoteCount;
-    private String VotePlayerId;
+    private boolean IsKilled;
+    private boolean IsProtected;
 
     public Player() {
     }
 
-    @Override
-    public String toString() {
-        return "Player{" +
-                "PlayerId='" + PlayerId + '\'' +
-                ", Name='" + Name + '\'' +
-                ", CharacterId='" + CharacterId + '\'' +
-                ", IsAlive=" + IsAlive +
-                ", IsSpeakTurn=" + IsSpeakTurn +
-                ", VoteCount=" + VoteCount +
-                ", VotePlayerId='" + VotePlayerId + '\'' +
-                '}';
+    public Player(String playerId, String name, String characterId, boolean isAlive, boolean isKilled, boolean isProtected) {
+        PlayerId = playerId;
+        Name = name;
+        CharacterId = characterId;
+        IsAlive = isAlive;
+        IsKilled = isKilled;
+        IsProtected = isProtected;
     }
 
     public String getPlayerId() {
@@ -57,37 +52,31 @@ public class Player {
         IsAlive = alive;
     }
 
-    public boolean isSpeakTurn() {
-        return IsSpeakTurn;
+    public boolean isKilled() {
+        return IsKilled;
     }
 
-    public void setSpeakTurn(boolean speakTurn) {
-        IsSpeakTurn = speakTurn;
+    public void setKilled(boolean killed) {
+        IsKilled = killed;
     }
 
-    public double getVoteCount() {
-        return VoteCount;
+    public boolean isProtected() {
+        return IsProtected;
     }
 
-    public void setVoteCount(double voteCount) {
-        VoteCount = voteCount;
+    public void setProtected(boolean aProtected) {
+        IsProtected = aProtected;
     }
 
-    public String getVotePlayerId() {
-        return VotePlayerId;
-    }
-
-    public void setVotePlayerId(String votePlayerId) {
-        VotePlayerId = votePlayerId;
-    }
-
-    public Player(String playerId, String name, String characterId, boolean isAlive, boolean isSpeakTurn, double voteCount, String votePlayerId) {
-        PlayerId = playerId;
-        Name = name;
-        CharacterId = characterId;
-        IsAlive = isAlive;
-        IsSpeakTurn = isSpeakTurn;
-        VoteCount = voteCount;
-        VotePlayerId = votePlayerId;
+    @Override
+    public String toString() {
+        return "Player{" +
+                "PlayerId='" + PlayerId + '\'' +
+                ", Name='" + Name + '\'' +
+                ", CharacterId='" + CharacterId + '\'' +
+                ", IsAlive=" + IsAlive +
+                ", IsKilled=" + IsKilled +
+                ", IsProtected=" + IsProtected +
+                '}';
     }
 }

@@ -35,9 +35,8 @@ const Home = () => {
       name: playerName,
       characterId: "",
       alive: true,
-      speakingTurn: false,
-      voteCount: 1,
-      votePlayerId: "",
+      killed: false,
+      protected: false,
     };
 
     let newPlayerId: string = "";
@@ -76,9 +75,8 @@ const Home = () => {
       name: playerName,
       characterId: "",
       alive: true,
-      speakingTurn: false,
-      voteCount: 1,
-      votePlayerId: "",
+      killed: false,
+      protected: false,
     };
 
     let newPlayerId: string = "";
@@ -107,11 +105,15 @@ const Home = () => {
     navigate("/character");
   };
 
-  const enterKeyPress = (event: any) => {
-    let newPlayerName = event.target.value;
-
+  const enterKeyPressName = (event: any) => {
     if (event.key === "Enter") {
       toTheRoomHandle();
+    }
+  };
+
+  const enterKeyPressRoom = (event: any) => {
+    if (event.key === "Enter") {
+      toRoom();
     }
   };
 
@@ -139,7 +141,7 @@ const Home = () => {
             autoFocus
             placeholder="Name"
             onChange={nameHandler}
-            onKeyDown={enterKeyPress}
+            onKeyDown={enterKeyPressName}
           />
         </Modal.Body>
         <Modal.Footer>
@@ -156,6 +158,7 @@ const Home = () => {
           <Input
             aria-label="input"
             placeholder="Room Id"
+            autoFocus
             clearable
             width="80%"
             contentRight={
@@ -168,6 +171,7 @@ const Home = () => {
             contentRightStyling={false}
             value={roomId}
             onChange={roomIdHandler}
+            onKeyDown={enterKeyPressRoom}
           />
         </div>
         <div className="m-5 grid grid-cols-2 gap-4">

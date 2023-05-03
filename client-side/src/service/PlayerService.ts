@@ -22,7 +22,21 @@ export class PlayerService {
     }
 
     async getPlayerListByRoomId(id: String): Promise<PlayerDTO[]> {
-        return await fetch(`${this.playerUrl}/getPlayerListByRoomId/${id}`)
+        return await fetch(`${this.playerUrl}/getPlayerListByRoomId/${id}`, {
+            method: 'GET'
+        })
+            .then(response => response.json());
+    }
+
+    // update player
+    async updatePlayer(playerId: string, player: PlayerDTO): Promise<PlayerDTO> {
+        return await fetch(`${this.playerUrl}/${playerId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(player)
+        })
             .then(response => response.json());
     }
 }
@@ -32,7 +46,6 @@ export interface PlayerDTO {
     name: string;
     characterId: string;
     alive: boolean;
-    speakingTurn: boolean;
-    voteCount: number;
-    votePlayerId: string;
+    killed: boolean;
+    protected: boolean;
 }

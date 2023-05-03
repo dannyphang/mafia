@@ -47,8 +47,21 @@ public class PlayerService {
     }
 
     public Player updatePlayer(String id, Player player) {
-
-        return null;
+        try {
+            Firestore db = FirestoreClient.getFirestore();
+            DocumentReference docRef = db.collection("Player").document(id);
+            ApiFuture<DocumentSnapshot> future = docRef.get();
+            DocumentSnapshot document = future.get();
+            if(document.exists()) {
+                db.collection("Player").document(id).set(player);
+                return player;
+            }
+            else {
+                return null;
+            }
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Player getPlayerById(String id) {
@@ -62,10 +75,9 @@ public class PlayerService {
                 String CharacterId = Objects.requireNonNull(document.getData()).get("characterId").toString();
                 String Name = document.getData().get("name").toString();
                 boolean IsAlive = (boolean) document.getData().get("alive");
-                boolean IsSpeakTurn = (boolean) document.getData().get("speakTurn");
-                double VoteCount = (double) document.getData().get("voteCount");
-                String VotePlayerId = document.getData().get("votePlayerId").toString();
-                return new Player(PlayerId, Name, CharacterId, IsAlive, IsSpeakTurn, VoteCount, VotePlayerId);
+                boolean IsKilled = (boolean) document.getData().get("killed");
+                boolean IsProtected = (boolean) document.getData().get("protected");
+                return new Player(PlayerId, Name, CharacterId, IsAlive, IsKilled, IsProtected);
             }
             else {
                 return null;

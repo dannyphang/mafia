@@ -25,6 +25,7 @@ public class MafiaApplication {
 			FirebaseOptions options = new FirebaseOptions.Builder()
 					.setCredentials(GoogleCredentials.fromStream(serviceAccount))
 					.setProjectId("mafia-9e3cf")
+					.setStorageBucket("mafia-9e3cf.appspot.com")
 					.build();
 
 			FirebaseApp.initializeApp(options);
