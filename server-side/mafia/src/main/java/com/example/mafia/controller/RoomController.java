@@ -37,4 +37,9 @@ public class RoomController {
     public String deletePlayerFromRoom(@RequestBody RoomPlayer rm) {
         return roomService.deletePlayerFromRoom(rm.getRoomId(), rm.getPlayerId());
     }
+
+    @PutMapping("")
+    public Room updateRoom(@RequestBody Room room) {
+        return roomService.updateRoom(room);
+    }
 }

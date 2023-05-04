@@ -71,13 +71,7 @@ public class PlayerService {
             ApiFuture<DocumentSnapshot> future = docRef.get();
             DocumentSnapshot document = future.get();
             if(document.exists()) {
-                String PlayerId = document.getId();
-                String CharacterId = Objects.requireNonNull(document.getData()).get("characterId").toString();
-                String Name = document.getData().get("name").toString();
-                boolean IsAlive = (boolean) document.getData().get("alive");
-                boolean IsKilled = (boolean) document.getData().get("killed");
-                boolean IsProtected = (boolean) document.getData().get("protected");
-                return new Player(PlayerId, Name, CharacterId, IsAlive, IsKilled, IsProtected);
+                return document.toObject(Player.class);
             }
             else {
                 return null;

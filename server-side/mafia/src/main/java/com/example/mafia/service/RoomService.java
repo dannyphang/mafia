@@ -10,6 +10,7 @@ import com.google.firebase.cloud.FirestoreClient;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
@@ -23,8 +24,8 @@ public class RoomService {
     public Room createNewRoom(){
         String id = UUID.randomUUID().toString().replace("-", "").substring(0, 6);
         Firestore db = FirestoreClient.getFirestore();
-        db.collection("Room").document(id).create(new Room(id, new ArrayList<>()));
-        return new Room(id, new ArrayList<>());
+        db.collection("Room").document(id).create(new Room(id, new ArrayList<>(), false, false, false, true));
+        return new Room(id, new ArrayList<>(), false, false, false, true);
     }
 
     public String addNewPlayerToRoom(String roomId, String playerId) {
@@ -115,14 +116,15 @@ public class RoomService {
         }
     }
 
-    public Player getPlayerById(String id) {
+    public Room updateRoom(Room room) {
         try {
             Firestore db = FirestoreClient.getFirestore();
-            DocumentReference docRef = db.collection("Player").document(id);
+            DocumentReference docRef = db.collection("Room").document(room.getRoomId());
             ApiFuture<DocumentSnapshot> future = docRef.get();
             DocumentSnapshot document = future.get();
             if(document.exists()) {
-                return document.toObject(Player.class);
+                db.collection("Room").document(room.getRoomId()).set(room);
+                return room;
             }
             else {
                 return null;

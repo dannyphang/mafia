@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { CharacterDTO, CharacterService } from "../../service/CharacterService";
 import { PlayerDTO, PlayerService } from "../../service/PlayerService";
-import { RoomService } from "../../service/RoomService";
+import { RoomDTO, RoomService } from "../../service/RoomService";
 
 const Room = () => {
   const { id } = useParams();
@@ -22,7 +22,9 @@ const Room = () => {
   let isAssignChar: Boolean = false;
   const [gameStart, setGameStart] = useState(isGameStart);
   const [assignChar, setAssignChar] = useState(isAssignChar);
+  const [gameRoom, setGameRoom] = useState<RoomDTO>();
   const [playerLists, setPlayerLists] = useState<PlayerDTO[]>([]);
+  const [playerIdLists, setPlayerIdLists] = useState<string[]>([]);
   const [charactersLists, setCharactersLists] = useState<CharacterDTO[]>([]);
   const [gameCharactersLists, setGameCharactersLists] = useState<
     CharacterDTO[]
@@ -43,7 +45,20 @@ const Room = () => {
 
   if (!id) return <div>Loading...</div>;
 
-  const gameStartClicked = () => {
+  const toAssignCharacterPage = async () => {
+    let currentRoom: RoomDTO = {
+      roomId: id,
+      gameStart: false,
+      nightTime: false,
+      dayTime: false,
+      preparationTime: true,
+      playerIdList: playerIdLists,
+    };
+
+    await new RoomService().updateRoom(currentRoom).then(() => {
+      setGameRoom(currentRoom);
+    });
+
     setAssignChar(true);
     getCharacters();
   };
@@ -51,8 +66,14 @@ const Room = () => {
   function StartButton() {
     return (
       <div className="grid justify-items-center my-12">
-        <Button auto flat rounded color="secondary" onPress={gameStartClicked}>
-          Start Game
+        <Button
+          auto
+          flat
+          rounded
+          color="secondary"
+          onPress={toAssignCharacterPage}
+        >
+          Assign Character
         </Button>
       </div>
     );
@@ -68,6 +89,10 @@ const Room = () => {
     if (id) {
       await new PlayerService().getPlayerListByRoomId(id).then((data) => {
         setPlayerLists(data);
+      });
+
+      await new RoomService().getRoomById(id).then((data) => {
+        setPlayerIdLists(data.playerIdList);
       });
     }
   }
@@ -92,7 +117,6 @@ const Room = () => {
   ) => {
     let playerId =
       playerLists[Number((event.target as HTMLSpanElement).id)].playerId;
-    //console.log(playerId);
     for (let player of playerLists) {
       if (player.playerId === playerId) {
         await new CharacterService()
@@ -360,7 +384,6 @@ const Room = () => {
     for (let gameChar of charactersLists) {
       for (let gamePlayerChar of characterPlayerList) {
         if (gameChar.characterId === gamePlayerChar.id) {
-          //console.log(gameChar);
           gameCharactersLists.push(gameChar);
         }
       }
@@ -429,9 +452,19 @@ const Room = () => {
               playerList.splice(random, 1);
             })
             .then(() => {
-              setGameStart(true);
               setAssignChar(false);
             });
+          let currentRoom: RoomDTO = {
+            roomId: id,
+            gameStart: true,
+            nightTime: false,
+            dayTime: false,
+            preparationTime: false,
+            playerIdList: playerIdLists,
+          };
+          await new RoomService().updateRoom(currentRoom).then((result) => {
+            setGameRoom(currentRoom);
+          });
         }
       }
       await getPlayers();
@@ -465,7 +498,7 @@ const Room = () => {
       {/* <Header /> */}
       <div>{id}</div>
       {/* shows players at room page before game start, hide it after the game start */}
-      {!assignChar && !gameStart && (
+      {!assignChar && !gameRoom?.gameStart && (
         <div>
           <Grid.Container gap={2} justify="center" style={{}}>
             {playerLists.map((item, index) => (
@@ -496,7 +529,7 @@ const Room = () => {
       )}
 
       {/* shows character selection */}
-      {assignChar && !gameStart && (
+      {assignChar && !gameRoom?.gameStart && (
         <div className="block row">
           <div className="flex justify-center row my-5">
             <div>Player amount: {playerLists.length}</div>
@@ -631,8 +664,11 @@ const Room = () => {
       )}
 
       {/* shows assigned players and game start */}
-      {!assignChar && gameStart && (
+      {!assignChar && gameRoom?.gameStart && (
         <div>
+          <div className="flex justify-center row mt-3">
+            <Text>Game Start</Text>
+          </div>
           <Grid.Container gap={2} justify="center" style={{}}>
             {playerLists.map((item, index) => (
               <Grid className="p-5" key={index}>
@@ -656,11 +692,7 @@ const Room = () => {
               flat
               color={"primary"}
               rounded
-              onPress={() => {
-                setAssignChar(true);
-                setGameStart(false);
-                setGameCharactersLists([]);
-              }}
+              onPress={toAssignCharacterPage}
               className="mx-2"
             >
               Back
@@ -681,7 +713,7 @@ const Room = () => {
 
       {/* Game Start */}
       {/* Night Time */}
-      {gameStart && <PlayerCard />}
+      {gameRoom?.gameStart && <PlayerCard />}
     </div>
   );
 };

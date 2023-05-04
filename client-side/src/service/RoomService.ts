@@ -48,11 +48,25 @@ export class RoomService {
             body: JSON.stringify(playerRoom)
         }).then(response => response.text());
     }
+
+    async updateRoom(room: RoomDTO): Promise<RoomDTO> {
+        return await fetch(`${this.roomUrl}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(room)
+        }).then(response => response.json());
+    }
 }
 
 export interface RoomDTO {
     roomId: string;
-    players: PlayerDTO[];
+    playerIdList: string[];
+    nightTime: boolean;
+    dayTime: boolean;
+    gameStart: boolean;
+    preparationTime: boolean;
 }
 
 export interface playerRoomDTO {
