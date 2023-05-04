@@ -67,6 +67,7 @@ export interface RoomDTO {
     dayTime: boolean;
     gameStart: boolean;
     preparationTime: boolean;
+    gameTurn: number;
 }
 
 export interface playerRoomDTO {

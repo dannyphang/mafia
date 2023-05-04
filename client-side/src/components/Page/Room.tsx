@@ -5,7 +5,6 @@ import {
   Grid,
   Input,
   Modal,
-  PressEvent,
   Table,
   Text,
 } from "@nextui-org/react";
@@ -20,9 +19,9 @@ const Room = () => {
 
   let isGameStart: Boolean = false;
   let isAssignChar: Boolean = false;
-  const [gameStart, setGameStart] = useState(isGameStart);
   const [assignChar, setAssignChar] = useState(isAssignChar);
   const [gameRoom, setGameRoom] = useState<RoomDTO>();
+  const [currentCharacterTurn, setCurrentCharacterTurn] = useState(0);
   const [playerLists, setPlayerLists] = useState<PlayerDTO[]>([]);
   const [playerIdLists, setPlayerIdLists] = useState<string[]>([]);
   const [charactersLists, setCharactersLists] = useState<CharacterDTO[]>([]);
@@ -39,11 +38,18 @@ const Room = () => {
   const [playerIndex, setPlayerIndex] = useState("");
 
   useEffect(() => {
+    getRoomStatus();
     getPlayers();
     getCharacters();
   }, []);
 
   if (!id) return <div>Loading...</div>;
+
+  const getRoomStatus = async () => {
+    await new RoomService().getRoomById(id).then((result) => {
+      setGameRoom(result);
+    });
+  };
 
   const toAssignCharacterPage = async () => {
     let currentRoom: RoomDTO = {
@@ -53,6 +59,7 @@ const Room = () => {
       dayTime: false,
       preparationTime: true,
       playerIdList: playerIdLists,
+      gameTurn: -1,
     };
 
     await new RoomService().updateRoom(currentRoom).then(() => {
@@ -274,9 +281,19 @@ const Room = () => {
             console.log(result);
           });
       }
+
+      getPlayers();
     }
 
     setPlayerCardVisible(false);
+  }
+
+  function cardColor(player: PlayerDTO) {
+    if (!player.alive) {
+      return "error";
+    } else {
+      return undefined;
+    }
   }
 
   function PlayerCard() {
@@ -360,6 +377,19 @@ const Room = () => {
                 Heal
               </Card>
             </Grid>
+            <Grid className="p-5" key={"vote"}>
+              <Card
+                style={{
+                  padding: "20px",
+                  width: "fit-content",
+                }}
+                isPressable
+                onPress={handlePlayerAction}
+                id="vote"
+              >
+                Vote
+              </Card>
+            </Grid>
           </Grid.Container>
         </Modal.Body>
         <Modal.Footer>
@@ -377,7 +407,27 @@ const Room = () => {
   }
 
   const nextBtn = async () => {
-    console.log(gameCharactersLists);
+    sortCharacterOrder();
+    setCurrentCharacterTurn(currentCharacterTurn + 1);
+
+    let updateRoomGameTurn: RoomDTO = {
+      roomId: id,
+      gameStart: true,
+      nightTime: false,
+      dayTime: false,
+      preparationTime: false,
+      playerIdList: playerIdLists,
+      gameTurn: currentCharacterTurn,
+    };
+
+    await new RoomService().updateRoom(updateRoomGameTurn).then((result) => {
+      setGameRoom(result);
+    });
+    // console.log(charactersLists);
+    // console.log(gameCharactersLists);
+    let currentCharacter = gameCharactersLists[currentCharacterTurn];
+
+    console.log(`Now it's ${currentCharacter.characterName}'s turn.`);
   };
 
   const sortCharacterOrder = () => {
@@ -388,10 +438,12 @@ const Room = () => {
         }
       }
     }
-
+    console.log(charactersLists);
     gameCharactersLists.sort((a, b) => {
       return a.characterOrder - b.characterOrder;
     });
+
+    console.log(gameCharactersLists);
   };
 
   const deletePlayerBtn = async (
@@ -461,6 +513,7 @@ const Room = () => {
             dayTime: false,
             preparationTime: false,
             playerIdList: playerIdLists,
+            gameTurn: -1,
           };
           await new RoomService().updateRoom(currentRoom).then((result) => {
             setGameRoom(currentRoom);
@@ -498,7 +551,7 @@ const Room = () => {
       {/* <Header /> */}
       <div>{id}</div>
       {/* shows players at room page before game start, hide it after the game start */}
-      {!assignChar && !gameRoom?.gameStart && (
+      {!assignChar && gameRoom?.preparationTime && !gameRoom?.gameStart && (
         <div>
           <Grid.Container gap={2} justify="center" style={{}}>
             {playerLists.map((item, index) => (
@@ -529,7 +582,7 @@ const Room = () => {
       )}
 
       {/* shows character selection */}
-      {assignChar && !gameRoom?.gameStart && (
+      {assignChar && gameRoom?.preparationTime && !gameRoom?.gameStart && (
         <div className="block row">
           <div className="flex justify-center row my-5">
             <div>Player amount: {playerLists.length}</div>
@@ -664,7 +717,7 @@ const Room = () => {
       )}
 
       {/* shows assigned players and game start */}
-      {!assignChar && gameRoom?.gameStart && (
+      {!gameRoom?.preparationTime && gameRoom?.gameStart && (
         <div>
           <div className="flex justify-center row mt-3">
             <Text>Game Start</Text>
@@ -680,8 +733,9 @@ const Room = () => {
                   id={String(index)}
                   isPressable
                   onClick={showCharCard}
+                  color={cardColor(item)}
                 >
-                  {item.name}
+                  <Text color={cardColor(item)}>{item.name}</Text>
                 </Card>
               </Grid>
             ))}

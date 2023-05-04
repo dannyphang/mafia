@@ -24,8 +24,8 @@ public class RoomService {
     public Room createNewRoom(){
         String id = UUID.randomUUID().toString().replace("-", "").substring(0, 6);
         Firestore db = FirestoreClient.getFirestore();
-        db.collection("Room").document(id).create(new Room(id, new ArrayList<>(), false, false, false, true));
-        return new Room(id, new ArrayList<>(), false, false, false, true);
+        db.collection("Room").document(id).create(new Room(id, new ArrayList<>(), false, false, false, true, -1));
+        return new Room(id, new ArrayList<>(), false, false, false, true, -1);
     }
 
     public String addNewPlayerToRoom(String roomId, String playerId) {

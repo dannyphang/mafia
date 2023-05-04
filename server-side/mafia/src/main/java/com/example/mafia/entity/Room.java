@@ -9,17 +9,19 @@ public class Room {
     private boolean IsDayTime;
     private boolean IsGameStart;
     private boolean IsPreparationTime;
+    private int GameTurn;
 
     public Room() {
     }
 
-    public Room(String roomId, ArrayList<String> playerIdList, boolean isNightTime, boolean isDayTime, boolean isGameStart, boolean isPreparationTime) {
+    public Room(String roomId, ArrayList<String> playerIdList, boolean isNightTime, boolean isDayTime, boolean isGameStart, boolean isPreparationTime, int gameTurn) {
         RoomId = roomId;
         PlayerIdList = playerIdList;
         IsNightTime = isNightTime;
         IsDayTime = isDayTime;
         IsGameStart = isGameStart;
         IsPreparationTime = isPreparationTime;
+        GameTurn = gameTurn;
     }
 
     public String getRoomId() {
@@ -70,6 +72,14 @@ public class Room {
         IsPreparationTime = preparationTime;
     }
 
+    public int getGameTurn() {
+        return GameTurn;
+    }
+
+    public void setGameTurn(int gameTurn) {
+        GameTurn = gameTurn;
+    }
+
     @Override
     public String toString() {
         return "Room{" +
@@ -79,6 +89,7 @@ public class Room {
                 ", IsDayTime=" + IsDayTime +
                 ", IsGameStart=" + IsGameStart +
                 ", IsPreparationTime=" + IsPreparationTime +
+                ", GameTurn=" + GameTurn +
                 '}';
     }
 }
