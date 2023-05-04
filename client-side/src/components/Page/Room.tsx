@@ -443,6 +443,13 @@ const Room = () => {
       return a.characterOrder - b.characterOrder;
     });
 
+    // remove duplicate
+    const uniqueList = gameCharactersLists.filter(
+      (item, index, self) =>
+        index ===
+        self.findIndex((obj) => obj.id === item.id && obj.name === item.name)
+    );
+
     console.log(gameCharactersLists);
   };
 
