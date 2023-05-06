@@ -447,10 +447,10 @@ const Room = () => {
     const uniqueList = gameCharactersLists.filter(
       (item, index, self) =>
         index ===
-        self.findIndex((obj) => obj.id === item.id && obj.name === item.name)
+        self.findIndex((obj) => obj.characterOrder === item.characterOrder)
     );
 
-    console.log(gameCharactersLists);
+    console.log(uniqueList);
   };
 
   const deletePlayerBtn = async (
