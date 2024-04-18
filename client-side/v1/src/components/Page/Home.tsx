@@ -7,6 +7,7 @@ import { RoomService } from "../../service/RoomService";
 const Home = () => {
   //open modal
   const [visible, setVisible] = useState(false);
+  const [playerNumber, setPlayerNumber] = useState(0);
   const [playerName, setPlayerName] = useState("");
   const closeHandler = () => {
     setVisible(false);
@@ -27,47 +28,49 @@ const Home = () => {
 
     await new RoomService().createNewRoom().then((data) => {
       newRoomId = data.roomId;
-      navigate("/room/" + data.roomId);
+      //navigate("/room/" + data.roomId);
+
+      setVisible(true);
     });
 
-    let newPlayer: PlayerDTO = {
-      playerId: "",
-      name: playerName,
-      characterId: "",
-      alive: true,
-      killed: false,
-      protected: false,
-    };
+    // let newPlayer: PlayerDTO = {
+    //   playerId: "",
+    //   name: playerName,
+    //   characterId: "",
+    //   alive: true,
+    //   killed: false,
+    //   protected: false,
+    // };
 
-    let newPlayerId: string = "";
-    await new PlayerService().createNewPlayer(newPlayer).then((data) => {
-      newPlayerId = data.playerId;
-    });
+    // let newPlayerId: string = "";
+    // await new PlayerService().createNewPlayer(newPlayer).then((data) => {
+    //   newPlayerId = data.playerId;
+    // });
 
-    await new RoomService()
-      .addPlayerToRoom(newRoomId, newPlayerId)
-      .then(() => {
-        navigate("/room/" + newRoomId);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    setPlayerName("");
+    // await new RoomService()
+    //   .addPlayerToRoom(newRoomId, newPlayerId)
+    //   .then(() => {
+    //     navigate("/room/" + newRoomId);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
+    // setPlayerName("");
   }
 
-  const toRoom = () => {
-    if (roomId === "") {
-      alert("Room id cannot be empty.");
-    } else {
-      new RoomService().getRoomById(roomId).then((data) => {
-        if (data.roomId === null) {
-          alert("Room id does not exist.");
-        } else {
-          setVisible(true);
-        }
-      });
-    }
-  };
+  // const toRoom = () => {
+  //   if (roomId === "") {
+  //     alert("Room id cannot be empty.");
+  //   } else {
+  //     new RoomService().getRoomById(roomId).then((data) => {
+  //       if (data.roomId === null) {
+  //         alert("Room id does not exist.");
+  //       } else {
+  //         setVisible(true);
+  //       }
+  //     });
+  //   }
+  // };
 
   const toTheRoomHandle = async () => {
     let newPlayer: PlayerDTO = {
@@ -95,6 +98,12 @@ const Home = () => {
     setPlayerName("");
   };
 
+  const noPlayerHandler = (event: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
+    setPlayerNumber(Number(event.target.value));
+  };
+
   const nameHandler = (event: {
     target: { value: React.SetStateAction<string> };
   }) => {
@@ -111,11 +120,11 @@ const Home = () => {
     }
   };
 
-  const enterKeyPressRoom = (event: any) => {
-    if (event.key === "Enter") {
-      toRoom();
-    }
-  };
+  // const enterKeyPressRoom = (event: any) => {
+  //   if (event.key === "Enter") {
+  //     toRoom();
+  //   }
+  // };
 
   return (
     <div className="grid justify-items-center my-12">
@@ -127,7 +136,7 @@ const Home = () => {
       >
         <Modal.Header>
           <Text id="modal-title" size={18}>
-            Your Name...?
+            Number of players...
           </Text>
         </Modal.Header>
         <Modal.Body>
@@ -140,7 +149,8 @@ const Home = () => {
             size="lg"
             autoFocus
             placeholder="Name"
-            onChange={nameHandler}
+            type="number"
+            onChange={noPlayerHandler}
             onKeyDown={enterKeyPressName}
           />
         </Modal.Body>
@@ -149,12 +159,12 @@ const Home = () => {
             Close
           </Button>
           <Button auto onPress={toTheRoomHandle}>
-            Ok
+            Next
           </Button>
         </Modal.Footer>
       </Modal>
       <div className="col">
-        <div className="col w-screen grid justify-items-center">
+        {/* <div className="col w-screen grid justify-items-center">
           <Input
             aria-label="input"
             placeholder="Room Id"
@@ -173,9 +183,9 @@ const Home = () => {
             onChange={roomIdHandler}
             onKeyDown={enterKeyPressRoom}
           />
-        </div>
+        </div> */}
         <div className="m-5 grid grid-cols-2 gap-4">
-          <Button
+          {/* <Button
             aria-label="button"
             flat
             color="primary"
@@ -183,7 +193,7 @@ const Home = () => {
             onPress={toRoom}
           >
             Enter Room
-          </Button>
+          </Button> */}
           <Button
             aria-label="button"
             flat

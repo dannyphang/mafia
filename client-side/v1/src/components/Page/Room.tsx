@@ -59,7 +59,7 @@ const Room = () => {
       dayTime: false,
       preparationTime: true,
       playerIdList: playerIdLists,
-      gameTurn: -1,
+      gameTurn: 0,
     };
 
     await new RoomService().updateRoom(currentRoom).then(() => {
@@ -122,10 +122,8 @@ const Room = () => {
   const showCharCard = async (
     event: React.MouseEvent<HTMLSpanElement, MouseEvent>
   ) => {
-    let playerId =
-      playerLists[Number((event.target as HTMLSpanElement).id)].playerId;
     for (let player of playerLists) {
-      if (player.playerId === playerId) {
+      if (player.name === (event.target as HTMLSpanElement).innerText) {
         await new CharacterService()
           .getCharacterById(player.characterId)
           .then((data) => {
@@ -407,27 +405,48 @@ const Room = () => {
   }
 
   const nextBtn = async () => {
-    sortCharacterOrder();
-    setCurrentCharacterTurn(currentCharacterTurn + 1);
+    //sortCharacterOrder();
+    if (currentCharacterTurn === gameCharactersLists.length) {
+      console.log("end of game");
 
-    let updateRoomGameTurn: RoomDTO = {
-      roomId: id,
-      gameStart: true,
-      nightTime: false,
-      dayTime: false,
-      preparationTime: false,
-      playerIdList: playerIdLists,
-      gameTurn: currentCharacterTurn,
-    };
+      let updateRoomGameTurn: RoomDTO = {
+        roomId: id,
+        gameStart: true,
+        nightTime: false,
+        dayTime: true,
+        preparationTime: false,
+        playerIdList: playerIdLists,
+        gameTurn: 0,
+      };
 
-    await new RoomService().updateRoom(updateRoomGameTurn).then((result) => {
-      setGameRoom(result);
-    });
-    // console.log(charactersLists);
-    // console.log(gameCharactersLists);
-    let currentCharacter = gameCharactersLists[currentCharacterTurn];
+      await new RoomService().updateRoom(updateRoomGameTurn).then((result) => {
+        setGameRoom(result);
+      });
 
-    console.log(`Now it's ${currentCharacter.characterName}'s turn.`);
+      setCurrentCharacterTurn(0);
+    } else if (currentCharacterTurn < gameCharactersLists.length) {
+      setCurrentCharacterTurn(currentCharacterTurn + 1);
+
+      let updateRoomGameTurn: RoomDTO = {
+        roomId: id,
+        gameStart: true,
+        nightTime: true,
+        dayTime: false,
+        preparationTime: false,
+        playerIdList: playerIdLists,
+        gameTurn: currentCharacterTurn,
+      };
+
+      await new RoomService().updateRoom(updateRoomGameTurn).then((result) => {
+        setGameRoom(result);
+      });
+
+      let currentCharacter = gameCharactersLists[currentCharacterTurn];
+
+      console.log(`Now it's ${currentCharacter.characterName}'s turn.`);
+    } else {
+      console.log("error");
+    }
   };
 
   const sortCharacterOrder = () => {
@@ -438,7 +457,7 @@ const Room = () => {
         }
       }
     }
-    console.log(charactersLists);
+    //console.log(charactersLists);
     gameCharactersLists.sort((a, b) => {
       return a.characterOrder - b.characterOrder;
     });
@@ -450,7 +469,7 @@ const Room = () => {
         self.findIndex((obj) => obj.characterOrder === item.characterOrder)
     );
 
-    console.log(uniqueList);
+    //console.log(uniqueList);
   };
 
   const deletePlayerBtn = async (
@@ -516,11 +535,11 @@ const Room = () => {
           let currentRoom: RoomDTO = {
             roomId: id,
             gameStart: true,
-            nightTime: false,
+            nightTime: true,
             dayTime: false,
             preparationTime: false,
             playerIdList: playerIdLists,
-            gameTurn: -1,
+            gameTurn: 0,
           };
           await new RoomService().updateRoom(currentRoom).then((result) => {
             setGameRoom(currentRoom);
@@ -726,9 +745,29 @@ const Room = () => {
       {/* shows assigned players and game start */}
       {!gameRoom?.preparationTime && gameRoom?.gameStart && (
         <div>
-          <div className="flex justify-center row mt-3">
-            <Text>Game Start</Text>
-          </div>
+          {/* Night */}
+          {gameRoom?.nightTime && (
+            <div className="flex justify-center row mt-3">
+              <Text>Night</Text>
+            </div>
+          )}
+          {/* Day */}
+          {gameRoom?.dayTime && (
+            <div className="flex justify-center row mt-3">
+              <Text>Day</Text>
+            </div>
+          )}
+          {/* Turn */}
+          {gameRoom?.nightTime &&
+            gameCharactersLists[currentCharacterTurn - 1] && (
+              <div className="flex justify-center row mt-3">
+                <Text>
+                  {gameCharactersLists[currentCharacterTurn - 1].characterName}{" "}
+                  Turn
+                </Text>
+              </div>
+            )}
+
           <Grid.Container gap={2} justify="center" style={{}}>
             {playerLists.map((item, index) => (
               <Grid className="p-5" key={index}>

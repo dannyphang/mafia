@@ -1,0 +1,55 @@
+body {
+  font: 600 14px/24px "Open Sans", "HelveticaNeue-Light", "Helvetica Neue Light",
+    "Helvetica Neue", Helvetica, Arial, "Lucida Grande", Sans-Serif;
+  margin: 12px 0;
+}
+.card-container {
+  cursor: pointer;
+  height: 100%;
+  perspective: 600;
+  position: relative;
+  width: 100%;
+}
+.card {
+  min-height: 150px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: all 1s ease-in-out;
+  width: 21vw;
+}
+.flipped {
+  transform: rotateY(180deg);
+  transition: all 1s ease-in-out;
+}
+.card .side {
+  backface-visibility: hidden;
+  border-radius: 6px;
+  height: 100%;
+  position: absolute;
+  overflow: hidden;
+  width: 100%;
+  display: grid;
+  align-content: center;
+  text-align: center;
+  font-size: 52px;
+}
+.card .back {
+  background: #eaeaed;
+  color: #0087cc;
+  text-align: center;
+  transform: rotateY(180deg);
+  padding: 10px;
+  display: grid;
+  align-content: center;
+  font-size: 14px;
+}
+
+.des_div {
+  display: grid;
+  align-content: center;
+  text-align: center;
+  padding: 10px;
+  height: 300px;
+  width: 100%;
+  font-size: 72px;
+}

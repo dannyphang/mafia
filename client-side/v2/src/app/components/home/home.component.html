@@ -1,0 +1,14 @@
+<div
+  class="h-screen"
+  style="
+    background-color: var(--theme-color-primary);
+    color: var(--theme-color-secondary);
+  "
+>
+  <div class="container">
+    <h1 class="text-4xl font-bold flex justify-center" (click)="editList()">
+      Pick A Number
+    </h1>
+    <app-card [cardList]="cardList"></app-card>
+  </div>
+</div>

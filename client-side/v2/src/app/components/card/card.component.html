@@ -1,0 +1,27 @@
+<div class="des_div">
+  {{ selectedCard.description[0] }}
+</div>
+<div class="card-container flex flex-wrap justify-center">
+  <div *ngFor="let cardItem of cardList" class="m-[10px]">
+    <div
+      class="card"
+      (click)="cardClicked(cardItem)"
+      [ngClass]="{ flipped: cardItem.flip }"
+    >
+      <!-- <div class="side">
+        <img
+          src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/29841/jimmy.jpg"
+          alt="Jimmy Eat World"
+        />
+      </div> -->
+      <div class="side" style="background-color: blueviolet">
+        {{ cardItem.title }}
+      </div>
+      <div class="side back">
+        <div *ngFor="let q of cardItem.description">
+          {{ q }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
