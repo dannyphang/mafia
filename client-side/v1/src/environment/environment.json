@@ -1,3 +1,4 @@
 {
-  "baseUrl": "https://mafia-9e3cf.as.r.appspot.com"
+  "serverBaseUrl": "https://mafia-9e3cf.as.r.appspot.com",
+  "localBaseUrl": "http://localhost:8888"
 }
