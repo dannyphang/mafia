@@ -549,6 +549,7 @@ const Room = () => {
       await getPlayers();
       sortCharacterOrder();
     }
+    console.log(characterPlayerList);
   };
 
   const emptyList = () => {

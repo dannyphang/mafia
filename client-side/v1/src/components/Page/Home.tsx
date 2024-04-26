@@ -10,8 +10,11 @@ const Home = () => {
   const [playerNumber, setPlayerNumber] = useState(0);
   const [playerName, setPlayerName] = useState("");
   const closeHandler = () => {
+    setEnterName(false);
     setVisible(false);
   };
+  let isEnterName: boolean = false;
+  const [enterName, setEnterName] = useState(false);
 
   // input room id
   const [roomId, setRoomId] = useState("");
@@ -72,6 +75,20 @@ const Home = () => {
   //   }
   // };
 
+  const toEnterNameHandler = () => {
+    setEnterName(true);
+    isEnterName = true;
+  };
+
+  const nextHandle = () => {
+    console.log(isEnterName);
+    if (!isEnterName) {
+      toEnterNameHandler();
+    } else {
+      toTheRoomHandle();
+    }
+  };
+
   const toTheRoomHandle = async () => {
     let newPlayer: PlayerDTO = {
       playerId: "",
@@ -104,9 +121,7 @@ const Home = () => {
     setPlayerNumber(Number(event.target.value));
   };
 
-  const nameHandler = (event: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
+  const nameHandler = (event: any) => {
     setPlayerName(event.target.value);
   };
 
@@ -116,7 +131,7 @@ const Home = () => {
 
   const enterKeyPressName = (event: any) => {
     if (event.key === "Enter") {
-      toTheRoomHandle();
+      nextHandle();
     }
   };
 
@@ -140,25 +155,45 @@ const Home = () => {
           </Text>
         </Modal.Header>
         <Modal.Body>
-          <Input
-            aria-label="input"
-            clearable
-            bordered
-            fullWidth
-            color="primary"
-            size="lg"
-            autoFocus
-            placeholder="Name"
-            type="number"
-            onChange={noPlayerHandler}
-            onKeyDown={enterKeyPressName}
-          />
+          {!enterName && (
+            <Input
+              aria-label="input"
+              clearable
+              bordered
+              fullWidth
+              color="primary"
+              size="lg"
+              autoFocus
+              placeholder="0"
+              type="number"
+              onChange={noPlayerHandler}
+              onKeyDown={enterKeyPressName}
+            />
+          )}
+          {/* loop input based on noPlayerHandler */}
+          {enterName &&
+            [...Array(playerNumber)].map((_, index) => (
+              <Input
+                key={index}
+                id={String(index)}
+                aria-label="input"
+                clearable
+                bordered
+                fullWidth
+                color="primary"
+                size="lg"
+                autoFocus
+                placeholder="Name"
+                onChange={nameHandler}
+                onKeyDown={enterKeyPressName}
+              />
+            ))}
         </Modal.Body>
         <Modal.Footer>
           <Button auto flat color="error" onPress={closeHandler}>
             Close
           </Button>
-          <Button auto onPress={toTheRoomHandle}>
+          <Button auto onPress={nextHandle}>
             Next
           </Button>
         </Modal.Footer>

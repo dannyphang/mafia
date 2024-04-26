@@ -50,7 +50,7 @@ export class RoomService {
     }
 
     async updateRoom(room: RoomDTO): Promise<RoomDTO> {
-        return await fetch(`${this.roomUrl}`, {
+        return await fetch(`${this.roomUrl}/${room.roomId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
